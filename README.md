@@ -17,7 +17,7 @@
 
 - 📫 How to reach me **pratcasley@gmail.com**
 
-- ⚡ Fun fact **I have a tendency to work without sleep**
+- ⚡ Fun fact **I have a tendency to work nonstop**
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
