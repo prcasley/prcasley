@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OfficeCrate ROI Model</title>
+<style>
+:root{
+  --plane:#080808; --surface-1:#121212; --surface-2:#1a1a1a; --surface-3:#222222;
+  --text-primary:#ffffff; --text-secondary:#c9c9c4; --text-muted:#8a8a84;
+  --grid:#232323; --axis:#383835; --border:rgba(255,255,255,.10);
+  --series-1:#3987e5; --series-2:#d95926; --series-3:#199e70; --series-4:#c98500;
+  --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+  --font:system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--plane);color:var(--text-primary);font:400 17px/1.65 var(--font)}
+.wrap{width:min(1120px,calc(100% - 32px));margin:0 auto;padding:40px 0 72px}
+a{color:var(--text-primary)}
+h1{font-size:1.9rem;font-weight:620;letter-spacing:-.015em;margin:0 0 8px;line-height:1.2}
+h2{font-size:1.35rem;font-weight:600;margin:0 0 16px;line-height:1.3}
+.lede{color:var(--text-secondary);max-width:72ch;margin:0 0 32px}
+.label{font-size:13px;font-weight:560;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted)}
+.card{background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:24px}
+.grid{display:grid;gap:16px}
+.layout{grid-template-columns:340px minmax(0,1fr);align-items:start}
+.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.kpi .v{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:600;letter-spacing:-.03em;line-height:1.15;margin-top:4px}
+.kpi .s{font-size:15px;color:var(--text-secondary)}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600}
+.status::before{content:"";width:10px;height:10px;border-radius:50%;background:currentColor}
+.st-good{color:var(--good)} .st-warn{color:var(--warning)} .st-bad{color:var(--critical)}
+fieldset{border:0;padding:0;margin:0 0 20px}
+legend{padding:0;margin-bottom:10px}
+.row{display:grid;grid-template-columns:1fr 92px;gap:10px;align-items:center;margin-bottom:8px;font-size:15px;color:var(--text-secondary)}
+input[type=number]{width:100%;background:var(--surface-2);color:var(--text-primary);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font:inherit;font-size:15px;text-align:right;font-variant-numeric:tabular-nums}
+input:focus-visible,button:focus-visible{outline:2px solid var(--series-1);outline-offset:2px}
+.seg{display:flex;gap:8px;margin-bottom:20px}
+.seg button{flex:1;background:var(--surface-2);color:var(--text-secondary);border:1px solid var(--border);border-radius:8px;padding:8px;font:inherit;font-size:15px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--text-primary);color:#080808;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:8px 6px;border-bottom:1px solid var(--grid);text-align:right;font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--text-muted);font-weight:560;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+tr.total td{font-weight:600;color:var(--text-primary);border-bottom:0}
+td{color:var(--text-secondary)}
+.note{font-size:15px;color:var(--text-muted);margin:12px 0 0}
+.chart-wrap{position:relative}
+svg{display:block;width:100%;height:auto}
+.tip{position:absolute;pointer-events:none;background:var(--surface-2);border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:8px 10px;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.6);opacity:0;transition:opacity .1s;white-space:nowrap}
+.legend{display:flex;gap:20px;flex-wrap:wrap;font-size:14px;color:var(--text-secondary);margin-top:8px}
+.legend span::before{content:"";display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle;background:var(--c)}
+.two{grid-template-columns:1fr 1fr}
+ul.verdict{margin:0;padding-left:20px;color:var(--text-secondary)} ul.verdict li{margin-bottom:6px}
+@media (max-width:900px){.layout,.two{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.kpis{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="label"><a href="./">OfficeCrate</a> · Launch model</p>
+  <h1>Budget, unit economics &amp; ROI</h1>
+  <p class="lede">Every number here is an editable assumption, not a quote. Replace them with real supplier quotes, shipping labels, and waitlist data as you get them. The model runs the 60-day pilot, then months 3–12 with optional ongoing ad spend and quarterly refresh boxes.</p>
+
+  <div class="grid layout">
+    <form class="card" id="inputs" onsubmit="return false">
+      <div class="seg" role="group" aria-label="Budget preset">
+        <button type="button" data-preset="lean" aria-pressed="false">Lean $1,000</button>
+        <button type="button" data-preset="comfortable" aria-pressed="true">Comfortable $1,500</button>
+      </div>
+
+      <fieldset><legend class="label">Pilot budget ($)</legend>
+        <div class="row"><label for="b_site">Website, domain, email</label><input type="number" id="b_site" min="0" step="10"></div>
+        <div class="row"><label for="b_samples">Samples &amp; fit testing</label><input type="number" id="b_samples" min="0" step="10"></div>
+        <div class="row"><label for="b_content">Content &amp; packaging</label><input type="number" id="b_content" min="0" step="10"></div>
+        <div class="row"><label for="b_ads">Ad experiments</label><input type="number" id="b_ads" min="0" step="10"></div>
+        <div class="row"><label for="b_setup">Business setup (NJ registration)</label><input type="number" id="b_setup" min="0" step="10"></div>
+        <div class="row"><label for="b_reserve">Working capital reserve (not spent)</label><input type="number" id="b_reserve" min="0" step="10"></div>
+      </fieldset>
+
+      <fieldset><legend class="label">Box economics</legend>
+        <div class="row"><label for="garment">Avg garment cost ($/piece)</label><input type="number" id="garment" min="0" step="0.5"></div>
+        <div class="row"><label for="ship">Shipping ($/box)</label><input type="number" id="ship" min="0" step="0.5"></div>
+        <div class="row"><label for="discount">Founding discount (%)</label><input type="number" id="discount" min="0" max="50" step="1"></div>
+        <div class="row"><label for="mix">Professional share of boxes (%)</label><input type="number" id="mix" min="0" max="100" step="5"></div>
+      </fieldset>
+
+      <fieldset><legend class="label">Demand</legend>
+        <div class="row"><label for="cpl">Cost per waitlist signup ($)</label><input type="number" id="cpl" min="0.5" step="0.5"></div>
+        <div class="row"><label for="organic">Organic signups in pilot</label><input type="number" id="organic" min="0" step="5"></div>
+        <div class="row"><label for="conv">Waitlist → paid (%)</label><input type="number" id="conv" min="0" max="100" step="1"></div>
+        <div class="row"><label for="rep1">Buy a 2nd box (%)</label><input type="number" id="rep1" min="0" max="100" step="5"></div>
+        <div class="row"><label for="rep2">Keep refreshing after that (%)</label><input type="number" id="rep2" min="0" max="100" step="5"></div>
+      </fieldset>
+
+      <fieldset><legend class="label">Months 3–12</legend>
+        <div class="row"><label for="adsMo">Ad spend per month ($)</label><input type="number" id="adsMo" min="0" step="50"></div>
+        <div class="row"><label for="orgMo">Organic signups per month</label><input type="number" id="orgMo" min="0" step="5"></div>
+        <div class="row"><label for="fixedMo">Fixed costs per month ($)</label><input type="number" id="fixedMo" min="0" step="5"></div>
+      </fieldset>
+    </form>
+
+    <div class="grid">
+      <div class="grid kpis">
+        <div class="card kpi"><div class="label">Pilot customers</div><div class="v" id="k_cust"></div><div class="s" id="k_cust_s"></div></div>
+        <div class="card kpi"><div class="label">CAC vs 12-mo LTV</div><div class="v" id="k_ltv"></div><div class="s" id="k_ltv_s"></div></div>
+        <div class="card kpi"><div class="label">12-month ROI</div><div class="v" id="k_roi"></div><div class="s" id="k_roi_s"></div></div>
+        <div class="card kpi"><div class="label">Break-even</div><div class="v" id="k_be"></div><div class="s" id="k_be_s"></div></div>
+      </div>
+
+      <div class="card">
+        <h2>Cumulative cash position, months 0–12</h2>
+        <div class="chart-wrap" id="chartWrap"><svg id="chart" viewBox="0 0 720 300" role="img" aria-label="Cumulative cash by month"></svg><div class="tip" id="tip"></div></div>
+        <div class="legend"><span style="--c:var(--series-1)">Cumulative net cash (excludes reserve)</span><span style="--c:var(--axis)">Break-even ($0)</span></div>
+        <p class="note">Spending happens in months 0–2. Founding boxes ship in month 2. Refresh boxes land every 3 months after a customer's first box.</p>
+      </div>
+
+      <div class="card">
+        <h2>Verdict</h2>
+        <ul class="verdict" id="verdict"></ul>
+      </div>
+
+      <div class="grid two">
+        <div class="card">
+          <h2>Per-box contribution</h2>
+          <table id="unit"></table>
+          <p class="note">Before marketing, your time, and fixed costs. Processing is 2.9% + $0.30.</p>
+        </div>
+        <div class="card">
+          <h2>Max garment cost per piece</h2>
+          <table id="maxcost"></table>
+          <p class="note">Use this when supplier quotes come in. If a quote is above your target column, the box doesn't work at that price.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var PLANS = {
+  starter: { name: 'Starter', price: 89, pieces: 3, pack: 3, reserve: 5, shipAdd: 0 },
+  pro:     { name: 'Professional', price: 149, pieces: 5, pack: 4, reserve: 8, shipAdd: 2 }
+};
+var PRESETS = {
+  comfortable: { b_site:100, b_samples:250, b_content:150, b_ads:350, b_setup:200, b_reserve:450 },
+  lean:        { b_site:100, b_samples:200, b_content:50,  b_ads:150, b_setup:200, b_reserve:300 }
+};
+var DEFAULTS = { garment:14, ship:10, discount:0, mix:20, cpl:6, organic:40, conv:8, rep1:35, rep2:60, adsMo:0, orgMo:15, fixedMo:30 };
+var ids = Object.keys(PRESETS.comfortable).concat(Object.keys(DEFAULTS));
+var $ = function (id) { return document.getElementById(id); };
+var usd = function (v, d) { return (v < 0 ? '−$' : '$') + Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); };
+
+function applyPreset(name) {
+  var p = PRESETS[name];
+  Object.keys(p).forEach(function (k) { $(k).value = p[k]; });
+  document.querySelectorAll('[data-preset]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.preset === name); });
+}
+function read() { var v = {}; ids.forEach(function (k) { v[k] = Math.max(0, parseFloat($(k).value) || 0); }); return v; }
+
+function boxEcon(plan, v, discountPct) {
+  var price = plan.price * (1 - discountPct / 100);
+  var garments = plan.pieces * v.garment;
+  var ship = v.ship + plan.shipAdd;
+  var proc = price * 0.029 + 0.30;
+  return { price: price, garments: garments, ship: ship, pack: plan.pack, proc: proc, reserve: plan.reserve,
+           contrib: price - garments - ship - plan.pack - proc - plan.reserve };
+}
+function maxGarment(plan, v, margin) {
+  var proc = plan.price * 0.029 + 0.30;
+  return (plan.price * (1 - margin) - (v.ship + plan.shipAdd) - plan.pack - proc - plan.reserve) / plan.pieces;
+}
+
+function model(v) {
+  var mix = v.mix / 100;
+  var s1 = boxEcon(PLANS.starter, v, v.discount), p1 = boxEcon(PLANS.pro, v, v.discount);
+  var sR = boxEcon(PLANS.starter, v, 0), pR = boxEcon(PLANS.pro, v, 0);
+  var firstC = (1 - mix) * s1.contrib + mix * p1.contrib;   // first box (discount applies)
+  var repeatC = (1 - mix) * sR.contrib + mix * pR.contrib;  // refresh boxes at full price
+  var q = v.rep1 / 100, r = v.rep2 / 100;
+  var refreshProb = [q, q * r, q * r * r];                   // boxes at +3, +6, +9 months
+  var ltv = firstC + repeatC * (refreshProb[0] + refreshProb[1] + refreshProb[2]);
+  var conv = v.conv / 100;
+  var pilotSignups = v.b_ads / v.cpl + v.organic;
+  var pilotCust = pilotSignups * conv;
+  var paidCAC = conv > 0 ? v.cpl / conv : Infinity;
+  var spentPilot = v.b_site + v.b_samples + v.b_content + v.b_ads + v.b_setup;
+
+  // Monthly cash flow, months 0..12
+  var cash = new Array(13).fill(0), newCust = new Array(13).fill(0);
+  cash[0] -= v.b_site + v.b_setup + v.b_samples;
+  cash[1] -= v.b_content + v.b_ads / 2;
+  cash[2] -= v.b_ads / 2;
+  newCust[2] = pilotCust;
+  for (var m = 3; m <= 12; m++) {
+    cash[m] -= v.adsMo + v.fixedMo;
+    newCust[m] = (v.adsMo / v.cpl + v.orgMo) * conv;
+  }
+  var boxes = 0, contribTotal = 0;
+  for (m = 0; m <= 12; m++) {
+    if (!newCust[m]) continue;
+    cash[m] += newCust[m] * firstC; boxes += newCust[m]; contribTotal += newCust[m] * firstC;
+    refreshProb.forEach(function (p, i) {
+      var mm = m + 3 * (i + 1);
+      if (mm <= 12) { cash[mm] += newCust[m] * p * repeatC; boxes += newCust[m] * p; contribTotal += newCust[m] * p * repeatC; }
+    });
+  }
+  var cum = [], run = 0, beMonth = null;
+  cash.forEach(function (c, i) { run += c; cum.push(run); if (beMonth === null && i > 2 && run >= 0) beMonth = i; });
+  var totalSpend = spentPilot + 10 * (v.adsMo + v.fixedMo);
+  return { s1: s1, p1: p1, sR: sR, pR: pR, firstC: firstC, repeatC: repeatC, ltv: ltv, pilotSignups: pilotSignups,
+           pilotCust: pilotCust, paidCAC: paidCAC, spentPilot: spentPilot, cum: cum, beMonth: beMonth,
+           totalSpend: totalSpend, net12: run, roi: run / totalSpend, boxes: boxes,
+           beBoxes: spentPilot / Math.max(repeatC, 0.01) };
+}
+
+function render() {
+  var v = read(), o = model(v);
+  $('k_cust').textContent = Math.round(o.pilotCust);
+  $('k_cust_s').textContent = Math.round(o.pilotSignups) + ' signups × ' + v.conv + '%';
+  var ratio = o.ltv / o.paidCAC;
+  $('k_ltv').textContent = isFinite(ratio) ? ratio.toFixed(1) + '×' : '—';
+  var cls = ratio >= 3 ? 'st-good' : ratio >= 1 ? 'st-warn' : 'st-bad';
+  var word = ratio >= 3 ? 'Ads can scale' : ratio >= 1 ? 'Ads barely pay' : 'Ads lose money';
+  $('k_ltv_s').innerHTML = '<span class="status ' + cls + '">' + word + '</span><br>CAC ' + usd(o.paidCAC) + ' · LTV ' + usd(o.ltv);
+  $('k_roi').textContent = (o.roi * 100).toFixed(0) + '%';
+  $('k_roi_s').textContent = 'Net ' + usd(o.net12) + ' on ' + usd(o.totalSpend) + ' spent';
+  $('k_be').textContent = o.beMonth !== null ? 'Month ' + o.beMonth : 'Not in 12 mo';
+  $('k_be_s').textContent = Math.ceil(o.beBoxes) + ' full-price boxes to recover the pilot';
+
+  var rows = [['Price', 'price'], ['Garments', 'garments'], ['Shipping', 'ship'], ['Packaging', 'pack'], ['Processing', 'proc'], ['Exchange reserve', 'reserve']];
+  var disc = v.discount > 0;
+  var h = '<tr><th></th><th>Starter</th><th>Pro</th></tr>';
+  rows.forEach(function (r, i) {
+    var sign = i === 0 ? 1 : -1;
+    h += '<tr><td>' + r[0] + '</td><td>' + usd(sign * o.s1[r[1]], 2) + '</td><td>' + usd(sign * o.p1[r[1]], 2) + '</td></tr>';
+  });
+  h += '<tr class="total"><td>Contribution' + (disc ? ' (1st box)' : '') + '</td><td>' + usd(o.s1.contrib, 2) + '</td><td>' + usd(o.p1.contrib, 2) + '</td></tr>';
+  h += '<tr><td>Margin</td><td>' + (o.s1.contrib / o.s1.price * 100).toFixed(1) + '%</td><td>' + (o.p1.contrib / o.p1.price * 100).toFixed(1) + '%</td></tr>';
+  if (disc) h += '<tr><td>Refresh box (full price)</td><td>' + usd(o.sR.contrib, 2) + '</td><td>' + usd(o.pR.contrib, 2) + '</td></tr>';
+  $('unit').innerHTML = h;
+
+  var mh = '<tr><th>Target margin</th><th>Starter</th><th>Pro</th></tr>';
+  [0.20, 0.30, 0.40].forEach(function (m) {
+    mh += '<tr><td>' + (m * 100) + '%</td><td>' + usd(maxGarment(PLANS.starter, v, m), 2) + '</td><td>' + usd(maxGarment(PLANS.pro, v, m), 2) + '</td></tr>';
+  });
+  $('maxcost').innerHTML = mh;
+
+  var vd = [];
+  vd.push(o.pilotCust >= 5 ? '<b>Pilot goal reachable:</b> about ' + Math.round(o.pilotCust) + ' paying customers against the target of 5.'
+                           : '<b>Pilot goal at risk:</b> about ' + Math.round(o.pilotCust) + ' customers against the target of 5. Push organic content or raise conversion before adding ads.');
+  vd.push('The pilot by itself does not pay back. It buys data. ' + usd(o.spentPilot) + ' of setup needs about ' + Math.ceil(o.beBoxes) + ' full-price boxes to recover.');
+  if (ratio < 1) vd.push('<b>Do not scale paid ads at these numbers.</b> Each paid customer costs ' + usd(o.paidCAC) + ' but returns ' + usd(o.ltv) + ' in 12 months. Levers: lower cost per signup, higher waitlist conversion, more Professional mix, cheaper garments.');
+  else if (ratio < 3) vd.push('Paid ads are marginal (LTV:CAC ' + ratio.toFixed(1) + '×). Scale slowly and only on the channels with the cheapest signups in your UTM data.');
+  else vd.push('Paid ads look healthy (LTV:CAC ' + ratio.toFixed(1) + '×). Scale in steps of about $250/month and re-check the real numbers each step.');
+  if (v.discount >= 15) vd.push('A ' + v.discount + '% first-box discount cuts Starter contribution to ' + usd(o.s1.contrib, 2) + '. A free style consult costs your time instead of margin.');
+  if (o.s1.contrib < 15) vd.push('<b>Starter margin is thin.</b> Garments need to come in under ' + usd(maxGarment(PLANS.starter, v, 0.25), 2) + ' per piece for a 25% margin.');
+  $('verdict').innerHTML = vd.map(function (t) { return '<li>' + t + '</li>'; }).join('');
+
+  drawChart(o.cum);
+}
+
+function drawChart(cum) {
+  var W = 720, H = 300, L = 64, R = 16, T = 16, B = 36;
+  var lo = Math.min(0, Math.min.apply(null, cum)), hi = Math.max(0, Math.max.apply(null, cum));
+  var pad = (hi - lo) * 0.08 || 100; lo -= pad; hi += pad;
+  var x = function (i) { return L + i * (W - L - R) / 12; };
+  var y = function (val) { return T + (hi - val) * (H - T - B) / (hi - lo); };
+  var step = niceStep((hi - lo) / 5), s = '';
+  for (var g = Math.ceil(lo / step) * step; g <= hi; g += step) {
+    s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y(g) + '" y2="' + y(g) + '" stroke="var(--grid)"/>';
+    s += '<text x="' + (L - 8) + '" y="' + (y(g) + 4) + '" text-anchor="end" fill="var(--text-muted)" font-size="12" style="font-variant-numeric:tabular-nums">' + usd(g) + '</text>';
+  }
+  s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y(0) + '" y2="' + y(0) + '" stroke="var(--axis)" stroke-width="1.5"/>';
+  for (var i = 0; i <= 12; i++) s += '<text x="' + x(i) + '" y="' + (H - 12) + '" text-anchor="middle" fill="var(--text-muted)" font-size="12">M' + i + '</text>';
+  var pts = cum.map(function (c, i) { return x(i) + ',' + y(c); }).join(' ');
+  s += '<polygon points="' + x(0) + ',' + y(0) + ' ' + pts + ' ' + x(12) + ',' + y(0) + '" fill="var(--series-1)" opacity=".1"/>';
+  s += '<polyline points="' + pts + '" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+  s += '<line id="cross" y1="' + T + '" y2="' + (H - B) + '" stroke="rgba(255,255,255,.25)" visibility="hidden"/>';
+  cum.forEach(function (c, i) { s += '<circle cx="' + x(i) + '" cy="' + y(c) + '" r="4" fill="var(--series-1)" stroke="var(--surface-1)" stroke-width="2"/>'; });
+  s += '<text x="' + (x(12) - 4) + '" y="' + (y(cum[12]) - 10) + '" text-anchor="end" fill="var(--text-primary)" font-size="13" font-weight="600">' + usd(cum[12]) + '</text>';
+  s += '<rect id="hit" x="' + L + '" y="' + T + '" width="' + (W - L - R) + '" height="' + (H - T - B) + '" fill="transparent"/>';
+  var svg = $('chart'); svg.innerHTML = s;
+  var tip = $('tip'), cross = $('cross');
+  $('hit').onmousemove = function (e) {
+    var box = svg.getBoundingClientRect(), sx = (e.clientX - box.left) * W / box.width;
+    var i = Math.max(0, Math.min(12, Math.round((sx - L) / ((W - L - R) / 12))));
+    cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.setAttribute('visibility', 'visible');
+    tip.innerHTML = '<b>Month ' + i + '</b><br>Cumulative ' + usd(cum[i]) + '<br>This month ' + usd(cum[i] - (i ? cum[i - 1] : 0));
+    var px = x(i) * box.width / W, py = y(cum[i]) * box.height / H;
+    tip.style.left = Math.min(px + 12, box.width - 170) + 'px'; tip.style.top = Math.max(py - 70, 0) + 'px'; tip.style.opacity = 1;
+  };
+  $('hit').onmouseleave = function () { tip.style.opacity = 0; cross.setAttribute('visibility', 'hidden'); };
+}
+function niceStep(raw) { var p = Math.pow(10, Math.floor(Math.log10(raw))), n = raw / p; return (n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10) * p; }
+
+Object.keys(DEFAULTS).forEach(function (k) { $(k).value = DEFAULTS[k]; });
+applyPreset('comfortable');
+document.querySelectorAll('[data-preset]').forEach(function (b) { b.onclick = function () { applyPreset(b.dataset.preset); render(); }; });
+$('inputs').addEventListener('input', render);
+render();
+</script>
+</body>
+</html>

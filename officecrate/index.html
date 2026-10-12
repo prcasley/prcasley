@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <title>OfficeCrate — Workwear without the overthinking</title>
+  <meta name="description" content="Stylist-curated office wear for men and women, previewed before it ships. Join the OfficeCrate founding waitlist." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: light dark;
+      --paper: #f7f7f3;
+      --surface: #ffffff;
+      --ink: #111111;
+      --muted: #565656;
+      --line: #c8c8c2;
+      --lime: #dfff00;
+      --lime-ink: #151900;
+      --blue: #2457ff;
+      --blue-dark: #1537ba;
+      --pink: #ff7db8;
+      --dark: #131313;
+      --success: #087443;
+      --shadow: 8px 8px 0 var(--ink);
+      --display: "Manrope", "Helvetica Neue", sans-serif;
+      --sans: "Manrope", "Helvetica Neue", sans-serif;
+      --mono: "IBM Plex Mono", monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --paper: #11120f;
+        --surface: #1a1b18;
+        --ink: #f7f7f3;
+        --muted: #bcbdb5;
+        --line: #42433d;
+        --lime: #d5f600;
+        --lime-ink: #111400;
+        --blue: #6687ff;
+        --blue-dark: #8ca3ff;
+        --pink: #ff8fc1;
+        --dark: #080907;
+        --success: #5ed69c;
+        --shadow: 8px 8px 0 #000;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; }
+    button, input { font: inherit; }
+    :focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
+    .wrap { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: color-mix(in srgb, var(--surface) 94%, transparent);
+      border-bottom: 2px solid var(--ink);
+      backdrop-filter: blur(12px);
+    }
+    .nav-inner { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .wordmark { font-weight: 900; font-size: 25px; line-height: 1; text-decoration: none; letter-spacing: -.055em; }
+    .wordmark span { display: inline-block; margin-left: 2px; padding: 3px 7px 4px; background: var(--lime); color: var(--lime-ink); transform: rotate(-2deg); }
+    .nav-links { display: flex; align-items: center; gap: 27px; font-size: 13px; font-weight: 800; }
+    .nav-links a { text-decoration: none; }
+    .nav-links a:not(.button):hover { color: var(--blue); }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 24px;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      background: var(--lime);
+      color: var(--lime-ink);
+      font-weight: 900;
+      letter-spacing: -.01em;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 var(--ink);
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+    .button:hover { background: var(--pink); transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+    .button.small { min-height: 42px; padding-inline: 18px; font-size: 12px; }
+    .button.ghost { background: transparent; color: var(--ink); }
+    .button.ghost:hover { background: var(--lime); color: var(--lime-ink); }
+    .hero {
+      padding: 72px 0 96px;
+      overflow: clip;
+      background-image: linear-gradient(color-mix(in srgb, var(--line) 28%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--line) 28%, transparent) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(390px, .84fr); align-items: center; gap: clamp(48px, 7vw, 94px); }
+    .eyebrow {
+      display: inline-flex;
+      margin: 0 0 22px;
+      padding: 7px 11px;
+      border: 1.5px solid currentColor;
+      border-radius: 999px;
+      color: var(--blue);
+      background: var(--surface);
+      font: 700 11px/1.2 var(--mono);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 25px; max-width: 700px; font: 900 clamp(48px, 6.4vw, 78px)/.96 var(--display); letter-spacing: -.065em; }
+    h1 em { display: inline; padding: 0 .08em; background: var(--lime); color: var(--lime-ink); font-style: normal; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+    .hero-copy { max-width: 610px; margin-bottom: 32px; font-size: clamp(18px, 2vw, 20px); color: var(--muted); line-height: 1.55; }
+    .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 18px; }
+    .microcopy { max-width: 220px; font: 500 12px/1.45 var(--mono); color: var(--muted); }
+    .hero-visual { position: relative; padding: 0 14px 34px 0; }
+    .hero-visual::before { content: "CURATED FOR YOUR CALENDAR"; position: absolute; top: -20px; right: -20px; z-index: 3; width: 112px; height: 112px; display: grid; place-items: center; padding: 18px; border: 2px solid var(--ink); border-radius: 50%; background: var(--pink); color: #171014; text-align: center; font: 700 10px/1.35 var(--mono); transform: rotate(9deg); }
+    .hero-frame { position: relative; min-height: 550px; overflow: hidden; border: 3px solid var(--ink); border-radius: 28px 28px 5px 28px; box-shadow: 12px 12px 0 var(--lime), 15px 15px 0 var(--ink); }
+    .hero-frame img { width: 100%; height: 100%; min-height: 550px; object-fit: cover; object-position: 53% center; }
+    .image-note { position: absolute; left: -22px; bottom: 0; width: min(315px, 80%); padding: 20px 22px; border: 2px solid var(--ink); border-radius: 5px 18px 18px 18px; background: var(--surface); box-shadow: 6px 6px 0 var(--blue); }
+    .image-note strong { display: block; margin-bottom: 5px; font-size: 15px; letter-spacing: -.02em; }
+    .image-note span { display: block; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .lookbook { display: grid; grid-template-columns: 1fr 1fr; min-height: 550px; background: #171717; }
+    .look { position: relative; min-width: 0; overflow: hidden; }
+    .look + .look { border-left: 2px solid #f4f4f0; }
+    .look img { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; object-fit: cover; }
+    .look.him img { object-position: 42% center; }
+    .look.her img { object-position: center; }
+    .look-label { position: absolute; top: 18px; left: 18px; z-index: 2; padding: 7px 11px; border: 1px solid #f4f4f0; background: rgba(8,8,8,.88); color: #f4f4f0; font: 700 10px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    section { scroll-margin-top: 90px; }
+    .section { padding: 104px 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 36px; margin-bottom: 52px; }
+    .section-head h2, .waitlist h2 { max-width: 650px; margin-bottom: 0; font: 900 clamp(38px, 5vw, 61px)/1 var(--display); letter-spacing: -.055em; }
+    .section-head p { max-width: 470px; margin-bottom: 4px; color: var(--muted); }
+    .steps { border-top: 2px solid var(--ink); }
+    .step { display: grid; grid-template-columns: 74px minmax(240px, .72fr) minmax(0, 1fr); gap: 30px; padding: 28px 0; border-bottom: 2px solid var(--ink); align-items: center; }
+    .step-num { width: 48px; height: 34px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 999px; background: var(--lime); color: var(--lime-ink); font: 700 13px/1 var(--mono); }
+    .step h3 { margin: 0; font-size: 19px; letter-spacing: -.025em; }
+    .step p { margin: 0; color: var(--muted); }
+    .collection-section { padding-top: 0; }
+    .collection-switch { display: grid; grid-template-columns: 1fr 1fr; border: 2px solid var(--ink); }
+    .collection { display: grid; grid-template-columns: minmax(0, .9fr) minmax(240px, 1.1fr); gap: 30px; min-height: 420px; padding: clamp(28px, 4vw, 46px); background: var(--surface); align-items: end; }
+    .collection + .collection { border-left: 2px solid var(--ink); }
+    .collection-tag { display: inline-block; margin-bottom: 22px; padding: 6px 10px; border: 1px solid currentColor; font: 700 10px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .collection h3 { margin-bottom: 14px; font: 900 clamp(32px, 4vw, 48px)/1 var(--display); letter-spacing: -.05em; }
+    .collection p { margin: 0; color: var(--muted); }
+    .collection-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; font-weight: 800; }
+    .collection-list li { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 11px; border-bottom: 1px solid var(--line); }
+    .collection-list li::after { content: "↗"; font-family: var(--mono); font-weight: 700; }
+    .plans-section { background: var(--blue); color: #fff; }
+    .plans-section .section-head p { color: #e2e7ff; }
+    .plans { display: grid; grid-template-columns: .92fr 1.08fr; gap: 24px; align-items: stretch; }
+    .plan { position: relative; padding: clamp(30px, 4vw, 48px); border: 2px solid #101010; border-radius: 8px 28px 28px 28px; background: #f7f7f3; color: #111; box-shadow: 8px 8px 0 #101010; }
+    .plan.featured { background: var(--lime); color: var(--lime-ink); transform: rotate(.7deg); }
+    .launch-label { display: inline-block; margin-bottom: 34px; padding: 7px 10px; border: 1.5px solid currentColor; border-radius: 999px; font: 700 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+    .plan h3 { margin-bottom: 9px; font-size: 15px; letter-spacing: .09em; text-transform: uppercase; }
+    .price { margin-bottom: 24px; font: 900 clamp(47px, 5vw, 68px)/1 var(--display); letter-spacing: -.055em; }
+    .price small { font: 700 14px/1 var(--sans); letter-spacing: 0; }
+    .plan p { max-width: 470px; margin-bottom: 35px; color: #4a4a46; }
+    .featured p { color: #3f4707; }
+    .plan-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; font-size: 14px; }
+    .plan-list li { display: flex; align-items: center; gap: 11px; }
+    .plan-list li::before { content: "↗"; font: 700 16px/1 var(--mono); color: var(--blue); }
+    .why { background: var(--dark); color: #f7f7f3; }
+    .why .section-head p { color: #bcbdb5; }
+    .reasons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .reason { min-height: 260px; padding: 28px 25px; border: 1.5px solid #62635e; border-radius: 22px 4px 22px 22px; background: #1e1f1c; }
+    .reason:nth-child(2) { transform: translateY(18px); }
+    .reason:nth-child(3) { background: var(--pink); color: #171014; }
+    .reason-mark { display: grid; place-items: center; width: 36px; height: 36px; margin-bottom: 46px; border-radius: 50%; background: var(--lime); color: var(--lime-ink); font: 800 14px/1 var(--mono); }
+    .reason-mark::before { content: "↗"; }
+    .reason h3 { margin-bottom: 12px; font-size: 22px; line-height: 1.05; letter-spacing: -.035em; }
+    .reason p { margin: 0; color: #bcbdb5; font-size: 14px; }
+    .reason:nth-child(3) p { color: #4b2738; }
+    .faq-layout { display: grid; grid-template-columns: .68fr 1.32fr; gap: clamp(48px, 8vw, 110px); align-items: start; }
+    .faq-intro h2 { margin: 0 0 18px; font: 900 clamp(40px, 5vw, 61px)/1 var(--display); letter-spacing: -.055em; }
+    .faq-intro p:not(.eyebrow) { color: var(--muted); }
+    .faq-list { border-top: 2px solid var(--ink); }
+    details { border-bottom: 2px solid var(--ink); }
+    summary { position: relative; padding: 25px 54px 25px 0; font-weight: 800; cursor: pointer; list-style: none; letter-spacing: -.02em; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; position: absolute; right: 8px; top: 19px; width: 34px; height: 34px; display: grid; place-items: center; border: 1.5px solid var(--ink); border-radius: 50%; background: var(--lime); color: var(--lime-ink); font-size: 20px; font-weight: 500; }
+    details[open] summary::after { content: "−"; }
+    details p { max-width: 680px; margin: -3px 50px 25px 0; color: var(--muted); }
+    .waitlist-section { padding: 34px 0 110px; }
+    .waitlist { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(48px, 7vw, 96px); padding: clamp(40px, 6vw, 70px); border: 2px solid var(--ink); border-radius: 32px 7px 32px 32px; background: var(--lime); color: var(--lime-ink); box-shadow: 10px 10px 0 var(--ink); align-items: center; }
+    .waitlist .eyebrow { background: #fff; color: #111; }
+    .waitlist h2 { margin-bottom: 22px; }
+    .waitlist-copy > p:not(.eyebrow) { max-width: 540px; margin: 0; color: #3f4707; font-size: 17px; }
+    .perk-line { display: flex; gap: 12px; align-items: flex-start; margin-top: 28px; color: #171900; font-weight: 800; font-size: 13px; }
+    .perk-line::before { content: "★"; flex: 0 0 auto; color: var(--blue); }
+    .form-card { padding: 30px; border: 2px solid #111; border-radius: 7px 24px 24px 24px; background: #fff; color: #111; box-shadow: 7px 7px 0 var(--blue); }
+    .field { display: grid; gap: 8px; margin-bottom: 17px; }
+    label { font: 700 11px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+    input { width: 100%; min-height: 52px; padding: 0 15px; border: 1.5px solid #111; border-radius: 12px; background: #f7f7f3; color: #111; }
+    input::placeholder { color: #74746d; }
+    fieldset { border: 0; padding: 0; margin-inline: 0; }
+    legend { margin-bottom: 10px; font: 700 11px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+    .line-choice { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .line-choice legend { grid-column: 1 / -1; }
+    .choice { display: flex; align-items: center; gap: 9px; min-height: 44px; padding: 0 12px; border: 1.5px solid #777; background: #0a0a0a; color: #f4f4f0; cursor: pointer; }
+    .choice input { width: 16px; min-height: 16px; margin: 0; accent-color: #f4f4f0; }
+    .form-card .button { width: 100%; margin-top: 4px; }
+    .form-note { margin: 14px 0 0; color: #5b5b55; font-size: 11px; line-height: 1.5; }
+    .success-state { display: none; min-height: 280px; align-content: center; text-align: left; }
+    .success-state.visible { display: grid; }
+    .success-symbol { width: 46px; height: 46px; display: grid; place-items: center; margin-bottom: 23px; border: 2px solid #111; border-radius: 50%; background: var(--lime); color: var(--lime-ink); font-weight: 900; }
+    .success-state h3 { margin-bottom: 10px; font: 900 32px/1.05 var(--display); letter-spacing: -.04em; }
+    .success-state p { margin-bottom: 24px; color: #5b5b55; }
+    .demo-label { margin-bottom: 12px; color: var(--blue); font: 700 10px/1 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+    footer { padding: 34px 0 calc(34px + env(safe-area-inset-bottom)); border-top: 2px solid var(--ink); color: var(--muted); font: 500 12px/1.4 var(--mono); }
+    .footer-inner { display: flex; justify-content: space-between; gap: 22px; }
+    @media (max-width: 900px) {
+      .nav-links a:not(.button) { display: none; }
+      .hero { padding-top: 50px; }
+      .hero-grid, .waitlist, .faq-layout { grid-template-columns: 1fr; }
+      .collection-switch { grid-template-columns: 1fr; }
+      .collection + .collection { border-left: 0; border-top: 2px solid var(--ink); }
+      .hero-grid { gap: 62px; }
+      .hero-visual { max-width: 680px; }
+      .plans { grid-template-columns: 1fr; }
+      .plan.featured { transform: none; }
+      .reasons { grid-template-columns: repeat(2, 1fr); }
+      .reason:nth-child(2) { transform: none; }
+      .section-head { align-items: start; flex-direction: column; gap: 18px; }
+      .faq-layout { gap: 36px; }
+    }
+    @media (max-width: 620px) {
+      .wrap { width: min(100% - 30px, 1180px); }
+      .nav-inner { min-height: 66px; }
+      .wordmark { font-size: 21px; }
+      .nav-links { gap: 10px; }
+      .nav-links .button { min-height: 40px; padding-inline: 13px; font-size: 11px; }
+      .hero { padding: 44px 0 68px; }
+      h1 { font-size: clamp(44px, 14vw, 64px); }
+      .hero-copy { font-size: 17px; }
+      .hero-actions { align-items: flex-start; flex-direction: column; }
+      .hero-visual { padding-right: 7px; padding-bottom: 30px; }
+      .hero-visual::before { top: -35px; right: -5px; width: 92px; height: 92px; padding: 13px; font-size: 8px; }
+      .hero-frame, .lookbook { min-height: 420px; }
+      .look img { min-height: 0; }
+      .look-label { top: 12px; left: 12px; }
+      .collection { grid-template-columns: 1fr; min-height: 0; gap: 30px; }
+      .image-note { left: -5px; padding: 16px 18px; }
+      .section { padding: 78px 0; }
+      .step { grid-template-columns: 54px 1fr; gap: 18px 14px; }
+      .step p { grid-column: 2; }
+      .plan { padding: 30px 23px; }
+      .reasons { grid-template-columns: 1fr; }
+      .reason { min-height: 0; padding: 27px 23px; }
+      .reason-mark { margin-bottom: 28px; }
+      .waitlist-section { padding-bottom: 78px; }
+      .waitlist { padding: 34px 20px; gap: 38px; box-shadow: 6px 6px 0 var(--ink); }
+      .form-card { padding: 24px 18px; }
+      .footer-inner { flex-direction: column; gap: 7px; }
+    }
+    /* OfficeCrate's monochrome workwear direction */
+    :root {
+      --paper: #080808;
+      --surface: #111111;
+      --ink: #f4f4f0;
+      --muted: #a8a8a2;
+      --line: #363636;
+      --lime: #f4f4f0;
+      --lime-ink: #090909;
+      --blue: #f4f4f0;
+      --blue-dark: #d3d3ce;
+      --pink: #b8b8b3;
+      --dark: #050505;
+      --success: #a8d8bd;
+      --shadow: 8px 8px 0 #000;
+    }
+    body { background: var(--paper); }
+    .site-nav { background: rgba(8, 8, 8, .94); border-color: #f4f4f0; }
+    .wordmark span { background: #f4f4f0; color: #090909; }
+    .nav-links a:not(.button):hover { color: #c8c8c2; }
+    .button { border-color: #f4f4f0; background: #f4f4f0; color: #090909; box-shadow: 4px 4px 0 #555; }
+    .button:hover { background: #c8c8c2; box-shadow: 2px 2px 0 #555; }
+    .button.ghost { border-color: #f4f4f0; color: #f4f4f0; background: transparent; }
+    .button.ghost:hover { background: #f4f4f0; color: #090909; }
+    .hero { background-image: linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px); }
+    .eyebrow { color: #f4f4f0; background: #111; }
+    h1 em { background: #f4f4f0; color: #090909; }
+    .hero-visual::before { border-color: #f4f4f0; background: #111; color: #f4f4f0; }
+    .hero-frame { border-color: #f4f4f0; border-radius: 2px; box-shadow: 12px 12px 0 #2c2c2c, 15px 15px 0 #f4f4f0; }
+    .image-note { border-color: #f4f4f0; border-radius: 2px; background: #111; box-shadow: 6px 6px 0 #f4f4f0; }
+    .steps, .step { border-color: #f4f4f0; }
+    .step-num { border-color: #f4f4f0; background: #f4f4f0; color: #090909; }
+    .plans-section { background: #101010; color: #f4f4f0; border-block: 1px solid #303030; }
+    .plans-section .section-head p { color: #aaa; }
+    .plan { border-color: #f4f4f0; border-radius: 2px; background: #151515; color: #f4f4f0; box-shadow: 8px 8px 0 #f4f4f0; }
+    .plan.featured { background: #f4f4f0; color: #090909; }
+    .plan p { color: #aaa; }
+    .featured p { color: #40403d; }
+    .plan-list li::before { color: currentColor; }
+    .why { background: #050505; }
+    .reason { border-color: #777; border-radius: 2px; background: #131313; }
+    .reason:nth-child(3) { background: #2a2a2a; color: #f4f4f0; }
+    .reason:nth-child(3) p { color: #bcbdb5; }
+    .reason-mark { background: #f4f4f0; color: #090909; }
+    .faq-list, details { border-color: #f4f4f0; }
+    summary::after { border-color: #f4f4f0; background: #f4f4f0; color: #090909; }
+    .waitlist { border-color: #f4f4f0; border-radius: 2px; background: #0e0e0e; color: #f4f4f0; box-shadow: 10px 10px 0 #f4f4f0; }
+    .waitlist .eyebrow { border-color: #f4f4f0; background: #f4f4f0; color: #090909; }
+    .waitlist-copy > p:not(.eyebrow), .perk-line { color: #bcbdb5; }
+    .perk-line::before { color: #f4f4f0; }
+    .form-card { border-color: #f4f4f0; border-radius: 2px; background: #171717; color: #f4f4f0; box-shadow: 7px 7px 0 #555; }
+    input { border-color: #777; background: #0a0a0a; color: #f4f4f0; }
+    input::placeholder, .form-note, .success-state p { color: #9a9a95; }
+    .success-symbol { border-color: #f4f4f0; background: #f4f4f0; color: #090909; }
+    .demo-label { color: #f4f4f0; }
+    select { width: 100%; min-height: 52px; padding: 0 12px; border: 1.5px solid #777; border-radius: 12px; background: #0a0a0a; color: #f4f4f0; font: inherit; }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .consent { display: flex; gap: 10px; align-items: flex-start; margin: 4px 0 16px; font: 500 12px/1.45 var(--sans); text-transform: none; letter-spacing: 0; color: #bcbdb5; }
+    .consent input { width: 16px; min-height: 16px; margin-top: 2px; flex: 0 0 auto; accent-color: #f4f4f0; }
+    .form-error { margin: 12px 0 0; color: #ffb4a8; font-size: 13px; }
+    .form-note a, footer a { color: inherit; }
+    .button[disabled] { opacity: .6; cursor: progress; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="wrap nav-inner">
+      <a class="wordmark" href="#top" aria-label="OfficeCrate home">Office<span>Crate</span></a>
+      <div class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#plans">Plans</a>
+        <a href="#faq">FAQ</a>
+        <a class="button small" href="#waitlist">Join the waitlist</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Workwear for every kind of office</p>
+          <h1>Look sharp. <em>Stay ready.</em></h1>
+          <p class="hero-copy">Office-ready style for men and women, picked for your dress code. Start with one capsule box: preview it, swap anything, keep it all. Refresh only when you want to.</p>
+          <div class="hero-actions">
+            <a class="button" href="#waitlist">Join the waitlist</a>
+            <span class="microcopy">Founding release limited to 25 boxes. No subscription required.</span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-frame">
+            <div class="lookbook">
+              <div class="look him">
+                <span class="look-label">For him</span>
+                <img src="img/look-him.webp" alt="Men in tailored business formal and smart-casual office outfits" />
+              </div>
+              <div class="look her">
+                <span class="look-label">For her</span>
+                <img src="img/look-her.webp" alt="Women in a tailored trouser suit and a sheath dress with a knit layer" />
+              </div>
+            </div>
+          </div>
+          <div class="image-note">
+            <strong>Your office. Your way to show up.</strong>
+            <span>From tailored business formal to grounded smart casual — styled for the room you’re walking into.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>One quiz.<br />A better rotation.</h2>
+          <p>Everything in your box is chosen to work together — and to make sense for the way your office actually dresses.</p>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <span class="step-num">01</span>
+            <h3>Take the 2-minute quiz</h3>
+            <p>Tell us your sizes, office dress code, and style preferences.</p>
+          </article>
+          <article class="step">
+            <span class="step-num">02</span>
+            <h3>Your stylist curates your box</h3>
+            <p>A real stylist picks pieces that work together, not a random pile of clothes.</p>
+          </article>
+          <article class="step">
+            <span class="step-num">03</span>
+            <h3>Preview &amp; swap</h3>
+            <p>See your box before it ships. Swap anything you don't love.</p>
+          </article>
+          <article class="step">
+            <span class="step-num">04</span>
+            <h3>Keep everything</h3>
+            <p>One flat price per box. No subscription. Opt in to a quarterly refresh only if you want one.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section collection-section" aria-labelledby="collection-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="collection-title">Two lines.<br />One sharp standard.</h2>
+          <p>Choose the line that fits you. Both are styled around your role, dress code, fit, and actual workweek.</p>
+        </div>
+        <div class="collection-switch">
+          <article class="collection">
+            <div>
+              <span class="collection-tag">For him</span>
+              <h3>The men’s line</h3>
+              <p>Clean layers and versatile tailoring, from the first interview to the leadership meeting.</p>
+            </div>
+            <ul class="collection-list" aria-label="Men's line pieces">
+              <li>Dress shirts</li>
+              <li>Chinos</li>
+              <li>Blazers</li>
+              <li>Knit polos</li>
+            </ul>
+          </article>
+          <article class="collection">
+            <div>
+              <span class="collection-tag">For her</span>
+              <h3>The women’s line</h3>
+              <p>Polished separates and dresses designed to mix, layer, and move through the day.</p>
+            </div>
+            <ul class="collection-list" aria-label="Women's line pieces">
+              <li>Blouses</li>
+              <li>Tailored trousers</li>
+              <li>Blazers</li>
+              <li>Sheath dresses</li>
+              <li>Knit tops</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section plans-section" id="plans">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Build your workweek.</h2>
+          <p>One price structure for both the men’s and women’s lines. Both include preview &amp; swap before shipping and one free size exchange. Shipping included in the continental US.</p>
+        </div>
+        <div class="plans">
+          <article class="plan">
+            <span class="launch-label">Founding pilot · available first</span>
+            <h3>Starter</h3>
+            <div class="price">$89<small>/box</small></div>
+            <p>3 mix-and-match essentials for your chosen line. A first-job capsule of polished foundations and easy layers.</p>
+            <ul class="plan-list">
+              <li>Best for new grads and first roles</li>
+              <li>Core wardrobe building blocks</li>
+              <li>Preview and swap before shipping</li>
+            </ul>
+          </article>
+          <article class="plan featured">
+            <span class="launch-label">Coming next · join the waitlist</span>
+            <h3>Professional</h3>
+            <div class="price">$149<small>/box</small></div>
+            <p>5 elevated pieces for your chosen line. Sharper fabrics, finishing pieces, zero morning decisions.</p>
+            <ul class="plan-list">
+              <li>Best for established professionals</li>
+              <li>Elevated fabrics and finishing pieces</li>
+              <li>Preview and swap before shipping</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section why">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>A wardrobe that works<br />as hard as you do.</h2>
+          <p>Office-specific curation means fewer single-purpose pieces and more outfits from every box.</p>
+        </div>
+        <div class="reasons">
+          <article class="reason">
+            <span class="reason-mark"></span>
+            <h3>Capsule wardrobe</h3>
+            <p>Every piece matches every other piece, so getting dressed takes less thought.</p>
+          </article>
+          <article class="reason">
+            <span class="reason-mark"></span>
+            <h3>Dress-code intelligence</h3>
+            <p>Business formal, business casual, or smart casual — tuned to your office.</p>
+          </article>
+          <article class="reason">
+            <span class="reason-mark"></span>
+            <h3>Fabrics that travel</h3>
+            <p>Wrinkle-resistant pieces built for commutes, meetings, and all-day comfort.</p>
+          </article>
+          <article class="reason">
+            <span class="reason-mark"></span>
+            <h3>A fit quiz that learns</h3>
+            <p>Your feedback sharpens every future box.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="wrap faq-layout">
+        <div class="faq-intro">
+          <p class="eyebrow">The details</p>
+          <h2>Questions, answered.</h2>
+          <p>Everything you need to know before your first box.</p>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>How is this different from Stitch Fix?</summary>
+            <p>OfficeCrate is office-only curation with a keep-everything model and preview &amp; swap. It's built around dress codes, not weekends.</p>
+          </details>
+          <details>
+            <summary>What if something doesn't fit?</summary>
+            <p>Each box includes one free size exchange, and your stylist records the adjustment for your next box.</p>
+          </details>
+          <details>
+            <summary>Do I keep everything?</summary>
+            <p>Yes. Everything in your box is included in one flat price per box.</p>
+          </details>
+          <details>
+            <summary>Is this a subscription?</summary>
+            <p>No. Your first box is a one-time purchase. If you opt in to quarterly refreshes, you approve each preview before you are charged, and you can turn refreshes off online anytime with no phone call.</p>
+          </details>
+          <details>
+            <summary>When does my box ship?</summary>
+            <p>We source each founding box after you approve your preview, so plan on about 2–3 weeks from approval to your door. You will get tracking as soon as it ships.</p>
+          </details>
+          <details>
+            <summary>Who is OfficeCrate for?</summary>
+            <p>OfficeCrate serves men and women across business formal, business casual, and smart casual dress codes.</p>
+          </details>
+          <details>
+            <summary>Do you carry women’s sizing?</summary>
+            <p>Yes. The women’s line is planned in sizes XS–XL, with fit preferences captured in your style quiz.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="waitlist-section" id="waitlist">
+      <div class="wrap waitlist">
+        <div class="waitlist-copy">
+          <p class="eyebrow">Limited first release</p>
+          <h2>Be a founding member.</h2>
+          <p>The first release is limited to 25 founding boxes. Join for first access, a free 1:1 style consultation, and launch pricing locked in for your first year.</p>
+          <div class="perk-line">Waitlist members are invited in the order they join.</div>
+        </div>
+        <div class="form-card" id="formCard">
+          <form id="waitlistForm">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" placeholder="Your name" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required />
+            </div>
+            <fieldset class="field line-choice">
+              <legend>I'm interested in</legend>
+              <label class="choice"><input type="radio" name="line" value="him" required /> For him</label>
+              <label class="choice"><input type="radio" name="line" value="her" /> For her</label>
+            </fieldset>
+            <div class="field">
+              <label for="dress_code">Office dress code</label>
+              <select id="dress_code" name="dress_code" required>
+                <option value="">Choose one</option>
+                <option value="business_formal">Business formal</option>
+                <option value="business_casual">Business casual</option>
+                <option value="smart_casual">Smart casual</option>
+                <option value="not_sure">Not sure yet</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="plan">Box I'd want</label>
+              <select id="plan" name="plan" required>
+                <option value="">Choose one</option>
+                <option value="starter">Starter · $89 · 3 pieces</option>
+                <option value="professional">Professional · $149 · 5 pieces</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="timing">When would you buy?</label>
+              <select id="timing" name="timing" required>
+                <option value="">Choose one</option>
+                <option value="now">Ready now</option>
+                <option value="new_role">Starting a new role soon</option>
+                <option value="few_months">In the next few months</option>
+                <option value="browsing">Just browsing</option>
+              </select>
+            </div>
+            <div class="hp" aria-hidden="true"><label for="company">Company</label><input id="company" name="company" type="text" tabindex="-1" autocomplete="off" /></div>
+            <label class="consent"><input type="checkbox" name="consent" value="yes" required /> Email me about OfficeCrate launch updates. Unsubscribe anytime.</label>
+            <button class="button" type="submit" id="submitBtn">Claim early access</button>
+            <p class="form-error" id="formError" role="alert" hidden></p>
+            <p class="form-note">We only use your details to plan the launch and invite you. See our <a href="privacy.html">privacy policy</a>.</p>
+          </form>
+          <div class="success-state" id="successState" aria-live="polite">
+                        <span class="success-symbol" aria-hidden="true">✓</span>
+            <h3>You're on the list.</h3>
+            <p>We'll email you when your invite is ready.</p>
+            <button class="button ghost" type="button" id="resetForm">Back to form</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <span>© OfficeCrate</span>
+      <span><a href="privacy.html">Privacy</a> · Your work fit, handled.</span>
+    </div>
+  </footer>
+
+  <script>
+    // Paste your Google Apps Script web-app URL (see officecrate/waitlist/README.md)
+    // or a Formspree endpoint (https://formspree.io/f/xxxx). Until set, the form
+    // tells visitors the waitlist isn't open instead of faking a success.
+    var WAITLIST_ENDPOINT = '';
+
+    (function () {
+      var form = document.getElementById('waitlistForm');
+      var success = document.getElementById('successState');
+      var reset = document.getElementById('resetForm');
+      var btn = document.getElementById('submitBtn');
+      var errorEl = document.getElementById('formError');
+      var params = new URLSearchParams(location.search);
+      var tracking = {
+        utm_source: params.get('utm_source') || '',
+        utm_medium: params.get('utm_medium') || '',
+        utm_campaign: params.get('utm_campaign') || '',
+        utm_content: params.get('utm_content') || '',
+        referrer: document.referrer || ''
+      };
+
+      function showError(msg) { errorEl.textContent = msg; errorEl.hidden = false; }
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        errorEl.hidden = true;
+        if (!form.reportValidity()) return;
+        if (form.company.value) return; // bot filled the honeypot
+        if (!WAITLIST_ENDPOINT) {
+          showError('The waitlist opens soon. Nothing was submitted; please check back shortly.');
+          return;
+        }
+        var data = new FormData(form);
+        data.delete('company');
+        Object.keys(tracking).forEach(function (k) { data.append(k, tracking[k]); });
+        data.append('submitted_at', new Date().toISOString());
+        var isAppsScript = WAITLIST_ENDPOINT.indexOf('script.google.com') !== -1;
+        btn.disabled = true;
+        fetch(WAITLIST_ENDPOINT, isAppsScript
+          ? { method: 'POST', mode: 'no-cors', body: new URLSearchParams(data) }
+          : { method: 'POST', body: data, headers: { Accept: 'application/json' } })
+          .then(function (res) {
+            if (!isAppsScript && !res.ok) throw new Error('HTTP ' + res.status);
+            form.style.display = 'none';
+            success.classList.add('visible');
+            reset.focus();
+          })
+          .catch(function () {
+            showError('Something went wrong. Please try again in a minute.');
+          })
+          .then(function () { btn.disabled = false; });
+      });
+
+      reset.addEventListener('click', function () {
+        success.classList.remove('visible');
+        form.reset();
+        form.style.display = '';
+        document.getElementById('name').focus();
+      });
+    })();
+  </script>
+</body>
+</html>
